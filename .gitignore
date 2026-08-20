@@ -222,6 +222,10 @@ __marimo__/
 # Kept out of version control until there is a definitive version to commit.
 # ---------------------------------------------------------------------------
 
+# Claude
+/.claude/
+/.specify/
+
 # Credentials & secrets
 *.pem
 *.key
