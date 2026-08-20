@@ -216,3 +216,52 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ---------------------------------------------------------------------------
+# Project-specific: credentials, test data, and draft documentation
+# Kept out of version control until there is a definitive version to commit.
+# ---------------------------------------------------------------------------
+
+# Credentials & secrets
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+secrets.*
+credentials.*
+service-account*.json
+*.env.*
+!.env.example
+.pgpass
+pgpass.conf
+
+# PostgreSQL
+*.dump
+*.sql.gz
+*.backup
+pgdata/
+postgres-data/
+pg_data/
+*.pgsql.bak
+
+# Test / sample data
+/data/
+/datasets/
+/sample_data/
+/test_data/
+/fixtures/local/
+/tmp/
+/scratch/
+*.local.csv
+*.local.xlsx
+
+# Obsidian
+.obsidian/
+.trash/
+
+# Draft / working documentation (not yet finalized for the repo)
+/docs/
+/notes/
+*.draft.md
+DRAFTS/
