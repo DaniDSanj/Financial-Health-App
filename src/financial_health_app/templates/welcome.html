@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}Bienvenida{% endblock %}
+{% block content %}
+<h1>Bienvenido/a, {{ first_name }}</h1>
+<form method="post" action="/logout">
+    <button type="submit">Cerrar sesión</button>
+</form>
+{% endblock %}
