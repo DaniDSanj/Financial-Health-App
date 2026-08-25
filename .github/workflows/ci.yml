@@ -8,6 +8,25 @@ on:
 jobs:
   quality:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: financial_health_app
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      # DATABASE_URL no se conecta realmente en los tests (get_db() siempre se sobreescribe),
+      # pero db.py exige que exista con un valor válido para poder importarse.
+      DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/financial_health_app
+      TEST_DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/financial_health_app_test
     steps:
       - uses: actions/checkout@v5
       - name: Check for pyproject.toml
@@ -17,9 +36,14 @@ jobs:
         if: steps.check.outputs.exists == 'true'
       - run: uv sync
         if: steps.check.outputs.exists == 'true'
+      - name: Create test database
+        if: steps.check.outputs.exists == 'true'
+        run: PGPASSWORD=postgres psql -h localhost -U postgres -c "CREATE DATABASE financial_health_app_test;"
       - run: uv run ruff check src/
         if: steps.check.outputs.exists == 'true'
       - run: uv run ruff format --check src/
+        if: steps.check.outputs.exists == 'true'
+      - run: uv run ty check
         if: steps.check.outputs.exists == 'true'
       - run: uv run pytest -q
         if: steps.check.outputs.exists == 'true'
