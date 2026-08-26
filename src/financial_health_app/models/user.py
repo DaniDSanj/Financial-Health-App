@@ -8,7 +8,6 @@ from sqlalchemy import (
     Date,
     DateTime,
     ForeignKey,
-    ForeignKeyConstraint,
     Index,
     Integer,
     func,
@@ -22,11 +21,6 @@ from financial_health_app.db import Base
 class User(Base):
     __tablename__ = "users"
     __table_args__ = (
-        ForeignKeyConstraint(
-            ["permission_level_group", "permission_level_code"],
-            ["keys_catalog.group_code", "keys_catalog.code"],
-            name="fk_users_permission_level",
-        ),
         Index("ix_users_username_lower", text("lower(username)"), unique=True),
         Index("ix_users_email_lower", text("lower(email)"), unique=True),
     )
@@ -41,10 +35,11 @@ class User(Base):
     household_id: Mapped[int | None] = mapped_column(
         Integer, ForeignKey("households.id"), nullable=True
     )
-    permission_level_group: Mapped[str] = mapped_column(
-        CHAR(3), nullable=False, default="NUS"
+    # Referencia keys_catalog.code WHERE group_code = info["keys_catalog_group"]
+    # (ADR-0008) — sin FK de BD; validar contra keys_catalog en la capa de aplicación.
+    permission_level_code: Mapped[str] = mapped_column(
+        CHAR(3), nullable=False, info={"keys_catalog_group": "NUS"}
     )
-    permission_level_code: Mapped[str] = mapped_column(CHAR(3), nullable=False)
     failed_login_attempts: Mapped[int] = mapped_column(
         Integer, nullable=False, default=0
     )

@@ -136,6 +136,13 @@ soportar la FK nullable desde `users`.
 | locked_until | TIMESTAMPTZ | NULL | FR-007; NULL = sin bloqueo activo |
 | created_at / created_by / updated_at / updated_by / version | — | auditoría estándar completa (`created_by`/`updated_by` autorreferencian `users`) |
 
+> **Nota de desviación (2026-08-27)**: `permission_level_group` y la FK compuesta descritas arriba
+> reflejan el estado en que esta feature se implementó. `docs/ADR/records/ADR-0008-eliminacion-columna-permission-level-group.md`
+> elimina `permission_level_group` como columna de fila — la asociación al grupo `NUS` pasa a ser
+> documental (metadato del campo + `COMMENT ON COLUMN`). Este fichero se conserva como registro
+> histórico de la feature 001 y no se reescribe; el estado vigente vive en
+> `.specify/memory/data-model.md`.
+
 **Reglas de negocio relevantes** (implementadas en `auth/lockout.py`, no en el esquema):
 - Al fallar un login: `failed_login_attempts += 1`; si llega a 5, fijar `locked_until = now() + 15min`.
 - Al expirar `locked_until` (es decir, `locked_until < now()`): resetear `failed_login_attempts = 0`

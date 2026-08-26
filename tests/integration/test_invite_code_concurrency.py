@@ -32,7 +32,6 @@ def _setup(engine: Engine) -> tuple[int, int, int]:
             email="concurrency-invite-owner@example.com",
             password_hash="dummy-hash",
             first_name="Owner",
-            permission_level_group="NUS",
             permission_level_code="ADM",
         )
         session.add(owner)
@@ -48,7 +47,6 @@ def _setup(engine: Engine) -> tuple[int, int, int]:
             email="concurrency-invite-consumer@example.com",
             password_hash="dummy-hash",
             first_name="Consumer",
-            permission_level_group="NUS",
             permission_level_code="MEM",
         )
         session.add(consumer)
