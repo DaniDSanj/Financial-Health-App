@@ -2,6 +2,11 @@
 {% block title %}Bienvenida{% endblock %}
 {% block content %}
 <h1>Bienvenido/a, {{ first_name }}</h1>
+{% if household_name %}
+<p>Tu hogar: {{ household_name }}</p>
+{% else %}
+<p><a href="/household">Crear o unirte a un hogar</a></p>
+{% endif %}
 <form method="post" action="/logout">
     <button type="submit">Cerrar sesión</button>
 </form>

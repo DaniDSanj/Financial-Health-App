@@ -1,18 +1,12 @@
 """App factory de FastAPI."""
 
 import os
-from pathlib import Path
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
-from fastapi.templating import Jinja2Templates
 from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
 load_dotenv()
-
-_TEMPLATES_DIR = Path(__file__).parent / "templates"
-
-templates = Jinja2Templates(directory=str(_TEMPLATES_DIR))
 
 
 def configure_proxy_headers(app: FastAPI, trusted_proxy_ips: list[str]) -> None:
@@ -40,9 +34,13 @@ def create_app() -> FastAPI:
     # Import diferido: routers/login.py importa `templates` de este módulo, así que
     # se importa aquí (después de que `templates` ya esté definido arriba) para
     # evitar un ciclo de imports.
+    from financial_health_app.routers.household import router as household_router
     from financial_health_app.routers.login import router as login_router
+    from financial_health_app.routers.register import router as register_router
 
     app.include_router(login_router)
+    app.include_router(register_router)
+    app.include_router(household_router)
     return app
 
 

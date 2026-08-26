@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Hogar{% endblock %}
+{% block content %}
+{% if household %}
+<h1>{{ household.name }}</h1>
+<p>Tu nivel de permisos: {{ permission_level_code }}</p>
+
+{% if error %}
+<p class="error">{{ error }}</p>
+{% endif %}
+{% if invite_code %}
+<p>Código de invitación (solo se muestra ahora, guárdalo): <strong>{{ invite_code }}</strong></p>
+{% endif %}
+<form method="post" action="/household/invite">
+    <button type="submit">Generar código de invitación</button>
+</form>
+{% else %}
+<h1>Sin hogar todavía</h1>
+
+{% if error %}
+<p class="error">{{ error }}</p>
+{% endif %}
+
+<h2>Crear un hogar</h2>
+<form method="post" action="/household/create">
+    <label for="name">Nombre del hogar</label>
+    <input type="text" id="name" name="name" required>
+    <button type="submit">Crear hogar</button>
+</form>
+
+<h2>Unirse a un hogar existente</h2>
+<form method="post" action="/household/join">
+    <label for="code">Código de invitación</label>
+    <input type="text" id="code" name="code" required>
+    <button type="submit">Unirse</button>
+</form>
+{% endif %}
+{% endblock %}
