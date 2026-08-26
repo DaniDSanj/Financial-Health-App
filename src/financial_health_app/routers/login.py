@@ -18,8 +18,9 @@ from financial_health_app.auth.session import (
     validate_session,
 )
 from financial_health_app.db import get_db
-from financial_health_app.main import templates
+from financial_health_app.models.household import Household
 from financial_health_app.models.user import User
+from financial_health_app.templating import templates
 
 router = APIRouter()
 
@@ -118,6 +119,12 @@ def welcome(request: Request, db: Session = Depends(get_db)) -> Response:
     user = _current_user(request, db)
     if user is None:
         return RedirectResponse("/login", status_code=303)
+    household_name = None
+    if user.household_id is not None:
+        household = db.get(Household, user.household_id)
+        household_name = household.name if household is not None else None
     return templates.TemplateResponse(
-        request, "welcome.html", {"first_name": user.first_name}
+        request,
+        "welcome.html",
+        {"first_name": user.first_name, "household_name": household_name},
     )
