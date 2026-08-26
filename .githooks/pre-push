@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# pre-push: replica las comprobaciones de calidad de .github/workflows/ci.yml antes de dejar
+# pushear — evita que llegue a GitHub un push con la suite en rojo (motivo: la PR #79 de
+# 002-user-registration-households se pudo mergear con CI fallando porque nada lo bloqueaba ni en
+# GitHub ni en local).
+#
+# Instalación (una vez por clon local, no versionado por Git):
+#   git config core.hooksPath .githooks
+set -uo pipefail
+
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$REPO_ROOT" || exit 1
+
+if [[ ! -f pyproject.toml ]]; then
+  # Mismo criterio que el step "Check for pyproject.toml" de ci.yml: no bloquear mientras el
+  # proyecto siga sin inicializar con uv.
+  exit 0
+fi
+
+echo "pre-push: ruff check..."
+uv run ruff check src/ || { echo "pre-push: ruff check ha fallado — push abortado." >&2; exit 1; }
+
+echo "pre-push: ruff format --check..."
+uv run ruff format --check src/ || { echo "pre-push: ruff format ha fallado — push abortado." >&2; exit 1; }
+
+echo "pre-push: ty check..."
+uv run ty check || { echo "pre-push: ty check ha fallado — push abortado." >&2; exit 1; }
+
+echo "pre-push: pytest..."
+uv run pytest -q || { echo "pre-push: pytest ha fallado — push abortado." >&2; exit 1; }
+
+echo "pre-push: todas las comprobaciones han pasado."
+exit 0
