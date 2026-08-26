@@ -27,6 +27,10 @@ jobs:
       # pero db.py exige que exista con un valor válido para poder importarse.
       DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/financial_health_app
       TEST_DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/financial_health_app_test
+      # Secreto de aplicación para el HMAC del código de invitación (ADR-0006, 002-user-registration-households).
+      # No es un secreto real de producción: solo necesita estar presente y ser estable durante la
+      # ejecución de los tests en este runner efímero, igual que DATABASE_URL de arriba.
+      INVITE_CODE_HMAC_SECRET: ci-only-invite-code-hmac-secret-not-for-production-use-0123456789ab
     steps:
       - uses: actions/checkout@v5
       - name: Check for pyproject.toml
