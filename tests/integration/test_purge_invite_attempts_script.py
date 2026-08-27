@@ -29,7 +29,6 @@ def _insert_attempt_row(db: Session, *, occurred_at: datetime) -> int:
         email="purge-test-user@example.com",
         password_hash="h",
         first_name="X",
-        permission_level_group="NUS",
         permission_level_code="MEM",
     )
     db.add(user)

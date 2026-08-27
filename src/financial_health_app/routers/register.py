@@ -100,7 +100,6 @@ def register_user(
         password_hash=password_hash,
         first_name=first_name,
         last_name=last_name,
-        permission_level_group="NUS",
         permission_level_code="MEM",
     )
     db.add(user)

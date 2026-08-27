@@ -23,7 +23,6 @@ def _make_user(db_session: Session, *, username: str, email: str) -> User:
         email=email,
         password_hash=hash_password("Segura123!"),
         first_name="Jane",
-        permission_level_group="NUS",
         permission_level_code="MEM",
     )
     db_session.add(user)

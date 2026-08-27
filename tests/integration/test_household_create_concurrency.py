@@ -28,7 +28,6 @@ def _insert_test_user(engine: Engine) -> int:
             email="concurrency-household-user@example.com",
             password_hash="dummy-hash",
             first_name="Concurrency",
-            permission_level_group="NUS",
             permission_level_code="MEM",
         )
         session.add(user)
